@@ -1,5 +1,10 @@
 <template>
-  <div id="map"></div>
+  <div class="row">
+    <div class="col-sm-10">
+      <div id="map"></div>
+    </div>
+    <SideBar />
+  </div>
 </template>
 
 <script>
@@ -7,11 +12,16 @@
 import * as L from "leaflet";
 import {getAuth} from "firebase/auth";
 import router from "@/router/NavRouter";
-import {getDocumentByIDFromDatabase} from "@/firebase-function";
+import {getDocumentByIDFromDatabase, setDocumentByIDFromDatabase} from "@/firebase-function";
+import SideBar from "@/components/SideBar";
+import axios from "axios";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Leaflet',
+  components: {
+    SideBar,
+  },
   data() {
     return {
       map: '',
@@ -28,18 +38,6 @@ export default {
       this.initData();
     } else {
       router.push({name: 'Login', params: {connectionNeeded: 'Vous devez être connecter pour accéder à ce service.'}});
-    }
-  },
-  watch: {
-    markers: {
-      handler(newTab, oldTab) {
-        console.log("watcher");
-        if (newTab !== oldTab) {
-          console.log("mise a jour")
-          this.drawMarkers();
-        }
-      },
-      deep: true
     }
   },
   methods: {
@@ -62,10 +60,7 @@ export default {
       addMarker.textContent = "ajouter un marker";
       addMarker.addEventListener("click", ()=> {
         console.log("ajout du marker");
-        console.log(e.latlng);
-        this.markers.push([e.latlng.lat, e.latlng.lng]);
-        console.log(this.markers);
-        this.drawMarkers();
+        this.drawMarker(e.latlng.lat, e.latlng.lng);
       })
       L.popup()
           .setLatLng(e.latlng)
@@ -82,12 +77,17 @@ export default {
             return Number(str);
           }));
         })
-        this.drawMarkers();
+        this.drawAllMarkers();
       } else {
         console.log("no such doc");
       }
     },
-    drawMarkers() {
+    drawMarker(lat, long){
+      this.markers.push([lat, long]);
+      //L.marker.bindPopup("test de nom");
+      L.marker([lat, long]).addTo(this.layerMarkers);
+    },
+    drawAllMarkers() {
       this.layerMarkers.clearLayers();
       this.markers.forEach(marker => {
         L.marker([marker[0], marker[1]]).addTo(this.layerMarkers);
@@ -104,33 +104,38 @@ export default {
         fillOpacity: 0.7
       }
     },
-    getTownship(url, callback) {
-      var req = new XMLHttpRequest();
-      req.open("GET", url);
-      req.addEventListener("load", function () {
-        if (req.status >= 200 && req.status < 400) {
-          callback(req.responseText);
-        } else {
-          console.error(req.status + " " + req.statusText + " " + url);
-        }
-      });
-      req.addEventListener("error", function () {
-        console.error("Erreur réseau avec l'URL " + url);
-      });
-      req.send(null); // TODO : 404
+    drawTownship(code) { //TODO : appel avec un parametre
+      axios
+        .get('https://geo.api.gouv.fr/communes/' + code + '/?&fields=contour')
+        .then(rep => {
+          let contour = rep.data.contour;
+          let nameTown = rep.data.nom;
+          let codeTown = rep.data.code;
+          let coordinates = JSON.parse(JSON.stringify(contour.coordinates))
+          let newCoordinates = []
+          coordinates[0].forEach(coord => {
+            newCoordinates.push(coord.reverse())
+          })
+          let polygone = L.polygon(newCoordinates, this.styleTownship())
+          polygone.on('mouseover', () => {
+            console.log(nameTown)
+          })
+          polygone.bindTooltip(nameTown,
+              {permanent: false, direction:"center"}
+          ).openTooltip()
+          this.arrondissements.push({
+            name: nameTown,
+            code: codeTown,
+            polygone: polygone,
+          });
+          polygone.addTo(this.layerArrondissements)
+        })
     },
-    drawTownship() { //TODO : appel avec un parametre
-      let url = "https://geo.api.gouv.fr/communes/75101/?&fields=contour"
-      this.getTownship(url, function (rep) {
-        let contour = JSON.parse(rep).contour;
-        let nameTown = JSON.parse(rep).nom;
-        let codeTown = JSON.parse(rep).code;
-
-        L.geoJSON(nameTown).addTo(this.map)
-        L.geoJSON(contour).addTo(this.map);
-        L.geoJSON(contour, {style: this.styleTownship}).addTo(this.map);
-
-      })
+    updateMarkersBDD() {
+      const objectToSet = {
+        markers: this.markers
+      }
+      setDocumentByIDFromDatabase("users", getAuth().currentUser.uid, objectToSet);
     }
   }
 }
