@@ -12,4 +12,9 @@ export default {
 
 <template>
   <NavBar />
+  <div>
+    <main>
+      <router-view></router-view>
+    </main>
+  </div>
 </template>

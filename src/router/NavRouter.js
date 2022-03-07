@@ -1,7 +1,9 @@
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHashHistory } from "vue-router"
 import Home from "@/views/Home"
-import About from "@/views/About"
-import Product from "@/views/Product"
+import PageNotFound from "@/views/PageNotFound";
+import Login from "@/views/Login";
+import Register from "@/views/Register";
+import Leaflet from "@/views/Leaflet";
 
 const routes = [
     {
@@ -10,20 +12,30 @@ const routes = [
         component: Home
     },
     {
-        name: 'About',
-        path: '/about',
-        component: About
+        name: 'PageNotFound',
+        path: '/:pathMatch(.*)*',
+        component: PageNotFound
     },
     {
-        name: 'Product',
-        path: '/product/:name',
-        component: Product,
+        name: 'Login',
+        path: '/login',
+        component: Login,
         props: true
+    },
+    {
+        name: 'Register',
+        path: '/register',
+        component: Register
+    },
+    {
+        name: 'Leaflet',
+        path: '/leaflet',
+        component: Leaflet
     }
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes: routes
 })
 
