@@ -24,11 +24,13 @@ export default {
   },
   data() {
     return {
-      map: '',
-      popup: '',
-      layerMarkers: '',
-      markers: [],
-      circles: [],
+      map: '', // map
+      popup: '', //
+      layerMarkers: '', // layer des markers
+      markers: [], // tableau de markers
+      circles: [], // zone selection
+      layerArrondissements: [], // layer des arrondissements
+      arrondissements: [], // arrondissements
     }
   },
   mounted() {
@@ -53,7 +55,8 @@ export default {
       }).addTo(this.map);
       this.map.on('click', this.onMapClick);
       this.layerMarkers = L.layerGroup().addTo(this.map);
-      this.drawTownship();
+      this.layerArrondissements = L.layerGroup().addTo(this.map)
+      this.drawTownship(75101);
     },
     onMapClick(e) {
       let addMarker = L.DomUtil.create('button');
