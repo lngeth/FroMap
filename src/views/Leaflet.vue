@@ -56,7 +56,8 @@ export default {
       this.map.on('click', this.onMapClick);
       this.layerMarkers = L.layerGroup().addTo(this.map);
       this.layerArrondissements = L.layerGroup().addTo(this.map)
-      this.drawTownship(75101);
+      //this.drawTownship(75113);
+      this.drawDepartment("Aude");
     },
     onMapClick(e) {
       let addMarker = L.DomUtil.create('button');
@@ -107,10 +108,77 @@ export default {
         fillOpacity: 0.7
       }
     },
-    drawTownship(code) { //TODO : appel avec un parametre
+    drawDepartment() {
       axios
-        .get('https://geo.api.gouv.fr/communes/' + code + '/?&fields=contour')
+          .get('https://public.opendatasoft.com/api/records/1.0/search/?dataset=fromagescsv-fromagescsv&q=&facet=departement&facet=fromage&facet=lait')
+          .then(rep => {
+            let data = rep.data;
+            let tabDepartement = data.records;
+            tabDepartement.forEach(dep => {
+              this.fromages.push(dep.fields.fromages);
+              this.typesLait.push(dep.fields.lait);
+              let fields = dep.fields;
+              if ('geo_shape' in fields) {
+                if ('coordinates' in fields.geo_shape) {
+                  let coordinates = fields.geo_shape.coordinates;
+
+
+                  let newCoordinates = []
+
+                  if (coordinates.length === 1) {
+                    coordinates[0].forEach(coord => {
+                      newCoordinates.push(coord.reverse())
+                    })
+                  } else {
+                    coordinates.forEach(tab => {
+                      let newTab = tab.reverse();
+                      newCoordinates.push(newTab);
+                    })
+                  }
+
+                  //création polygone
+                  let polygone = L.polygon(newCoordinates, this.styleTownship());
+                  polygone.addTo(this.layerArrondissements);
+                  L.multiPolyLin
+                  //console.log("affiche");
+                }
+              }
+            });
+
+            /*
+            let contour = rep.data.contour;
+            let nameTown = rep.data.nom;
+            let codeTown = rep.data.code;
+            let coordinates = JSON.parse(JSON.stringify(contour.coordinates))
+            let newCoordinates = []
+
+            coordinates[0].forEach(coord => {
+              newCoordinates.push(coord.reverse())
+            })
+            let polygone = L.polygon(newCoordinates, this.styleTownship())
+            polygone.on('mouseover', () => {
+              console.log(nameTown)
+            })
+            polygone.bindTooltip(nameTown,
+                {permanent: false, direction:"center"}
+            ).openTooltip()
+            this.arrondissements.push({
+              name: nameTown,
+              code: codeTown,
+              polygone: polygone,
+            });
+            polygone.addTo(this.layerArrondissements)
+
+             */
+
+
+          })
+    },
+    drawTownship(code) {
+      axios
+        .get('https://geo.api.gouv.fr/communes/' + code + '?&fields=contour')
         .then(rep => {
+          console.log(rep)
           let contour = rep.data.contour;
           let nameTown = rep.data.nom;
           let codeTown = rep.data.code;
