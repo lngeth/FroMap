@@ -86,6 +86,7 @@ export default {
       } else {
         console.log("no such doc");
       }
+      this.getLocation();
     },
     drawMarker(lat, long){
       this.markers.push([lat, long]);
@@ -185,6 +186,16 @@ export default {
           //console.log(polygone)
           polygone.addTo(this.layerArrondissements)
         })
+    },
+    getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.showPosition);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    },
+    showPosition(pos) {
+      this.drawMarker(pos.coords.latitude, pos.coords.longitude);
     },
     updateMarkersBDD() {
       const objectToSet = {
