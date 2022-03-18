@@ -1,5 +1,5 @@
 <template>
-  <div class="col-sm-2">
+  <div class="col-sm-4">
     <div v-if="etat">
       <h1>Le jeu </h1>
       <questionnaire></questionnaire>
@@ -12,23 +12,50 @@
 
 <script>
 import Questionnaire from "@/components/Questionnaire";
+import {getDocumentByIDFromDatabase, setDocumentByIDFromDatabase} from "@/firebase-function";
+import {getAuth} from "firebase/auth";
 export default {
   name: "SideBar",
+  props: [
+      'fromage',
+  ],
   components: {
     // eslint-disable-next-line vue/no-unused-components
     Questionnaire
   },
   data() {
     return {
-      etat: 'true' // TODO metter '' pour le départ
+      departement:'',
+      etat: '',
+      score: '',
     }
   },
-  methods() {
-    var fromage = true; //TODO : envoyer une info quand l'user un sélection une région
-    if (fromage) {
-      this.etat = true;
+  watch: {
+    fromage() {
+      if (this.fromage !== null) {
+        console.log(this.fromage.departement);
+        this.departement = this.fromage.departement;
+        this.etat = true;
+      }
+    }
+  },
+  async mounted() {
+    console.log(getAuth().currentUser.uid)
+    const docSnap = await getDocumentByIDFromDatabase("users", getAuth().currentUser.uid);
+    if (docSnap.exists()) {
+      this.score = docSnap.data()["score"];
     } else {
-      this.etat = false;
+      console.log("no such doc");
+    }
+  },
+  methods: {
+    updateScore(e) {
+      if (e) {
+        this.score += 10;
+      } else {
+        this.score -= 5;
+      }
+      setDocumentByIDFromDatabase("users", getAuth().currentUser.uid, {score: this.score});
     }
   }
 }

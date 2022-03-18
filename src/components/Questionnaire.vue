@@ -6,7 +6,7 @@
       </div>
       <div class="mb-3">
         <label for="optionsLait" class="form-label">Type de lait</label>
-        <select id="optionsLait">
+        <select id="optionsLait" v-model="typeLait">
           <option value="Vache" selected>Vache</option>
           <option value="chevre">Chèvre</option>
           <option value="brebie">Brebie</option>
