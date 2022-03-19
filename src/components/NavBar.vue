@@ -31,19 +31,29 @@ export default {
 </script>
 
 <template>
-  <nav class="navbar navbar-light bg-light">
+  <nav class="navbar">
     <div class="container-fluid">
-      <router-link to="/" class="navbar-brand">
-        <img src="../assets/vivino_icon.png" alt="Image vivino" width="30" height="30" class="d-inline-block align-text-top">
+      <router-link to="/" class="navbar-brand fw-bold" id="router-link">
         Accueil
       </router-link>
-      <router-link to="/leaflet">Map</router-link>
+      <router-link class="nav-link fw-bold" id="router-link" to="/leaflet">Map</router-link>
       <div v-if="isConnected">
-        <a @click="signOut">Déconnection</a>
+        <a @click="signOut" class="fw-bold text-decoration-none" id="router-link">Déconnection</a>
       </div>
       <div v-else>
-        <router-link to="/login">Se connecter</router-link>
+        <router-link id="router-link" to="/login">Se connecter</router-link>
       </div>
     </div>
   </nav>
 </template>
+
+<style scoped>
+nav.navbar, router-link {
+  background-color: #FFFFFF;
+  color: #FF9F1C;
+}
+
+#router-link {
+  color: #FF9F1C;
+}
+</style>

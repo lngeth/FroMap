@@ -33,7 +33,6 @@ export default {
   watch: {
     fromage() {
       if (this.fromage !== null) {
-        console.log(this.fromage.departement);
         this.departement = this.fromage.departement;
         this.etat = true;
       }

@@ -4,15 +4,14 @@
       <div class="mb-3">
         <p>Quel lait a été utilisé pour fabriquer {{ fromage }} ?</p>
       </div>
-      <div class="mb-3">
-        <label for="optionsLait" class="form-label">Type de lait</label>
-        <select id="optionsLait" v-model="typeLait">
-          <option value="Vache" selected>Vache</option>
-          <option value="chevre">Chèvre</option>
-          <option value="brebie">Brebie</option>
-        </select>
+      <div class="mb-3 mt-5 d-flex justify-content-around">
+        <p @click="clickTypeLait('Vache')" v-bind:class="{'selected':typeLait==='Vache'}">Vache</p>
+        <p @click="clickTypeLait('Chèvre')" v-bind:class="{'selected':typeLait==='Chèvre'}">Chèvre</p>
+        <p @click="clickTypeLait('Brebie')" v-bind:class="{'selected':typeLait==='Brebie'}">Brebie</p>
       </div>
-      <button type="submit" class="btn btn-primary">Valider</button>
+      <div class="text-end pe-5">
+        <button type="submit" class="btn" style="background-color: #2EC4B6; color: #FFFFFF">Valider</button>
+      </div>
     </form>
   </div>
   <div v-if="result" class="mt-lg-4">
@@ -20,8 +19,8 @@
       Bonne réponse !
     </div>
   </div>
-  <div v-else class="mt-lg-4">
-    <div class="alert alert-warning">
+  <div v-else class="mt-lg-4 d-flex justify-content-center">
+    <div class="alert alert-warning text-center">
       Perdu, vous pouvez rejouer!
     </div>
   </div>
@@ -41,6 +40,14 @@ export default {
     }
   },
   methods: {
+    clickTypeLait(e) {
+      this.typeLait = e;
+    },
+    selected(e) {
+      e.setStyle({
+        border: "1px solid black",
+      })
+    },
     submitForm() {
       //TODO vérifie r le choix dans la bdd ou script dans leaflet
       var res = true
@@ -51,5 +58,11 @@ export default {
 </script>
 
 <style scoped>
-
+.selected {
+  border: 2px solid #FF9F1C;
+  background-color: #FF9F1C;
+  border-radius: 10px;
+  padding: 5px;
+  color: #FFFFFF;
+}
 </style>
