@@ -14,8 +14,8 @@
       </div>
     </form>
   </div>
-  <div v-if="result" class="mt-lg-4">
-    <div class="alert alert-success">
+  <div v-if="result" class="mt-lg-4 d-flex justify-content-center">
+    <div class="alert alert-success text-center">
       Bonne réponse !
     </div>
   </div>
