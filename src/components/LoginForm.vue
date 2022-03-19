@@ -47,7 +47,7 @@ export default {
             // Signed in
             const user = userCredential.user;
             console.log(user);
-            console.log(user.uid);
+            //console.log(user.uid);
             this.$router.push({name: 'Home'});
           })
           .catch((error) => {

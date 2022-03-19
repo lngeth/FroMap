@@ -53,8 +53,16 @@ export default {
         zoomOffset: -1,
         accessToken: process.env.VUE_APP_ACCESS_TOKEN_LEAFLET
       }).addTo(this.map);
+      this.layerMarkers = L.layerGroup().addTo(this.map);
       this.layerArrondissements = L.layerGroup().addTo(this.map)
       this.initObjFromage();
+      this.getLocation();
+    },
+    drawMarker(lat, long){
+      this.markers.push([lat, long]);
+      //L.marker.bindPopup("test de nom");
+      L.marker([lat, long]).addTo(this.layerMarkers);
+      this.map.addLayer(this.layerMarkers);
     },
     styleTownship() {
       return {
@@ -144,6 +152,16 @@ export default {
           polygone.addTo(this.layerArrondissements)
         })
     },
+    getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.showPosition);
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+      }
+    },
+    showPosition(pos) {
+      this.drawMarker(pos.coords.latitude, pos.coords.longitude)
+    }
   }
 }
 </script>

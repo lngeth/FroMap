@@ -40,7 +40,7 @@ export default {
     }
   },
   async mounted() {
-    console.log(getAuth().currentUser.uid)
+    //console.log(getAuth().currentUser.uid)
     const docSnap = await getDocumentByIDFromDatabase("users", getAuth().currentUser.uid);
     if (docSnap.exists()) {
       this.score = docSnap.data()["score"];
