@@ -30,14 +30,26 @@
 
 export default {
   name: `Questionnaire`,
+  props: [
+    'objFromage',
+      'scoreUser'
+  ],
   data() {
     return {
-      typeLait: ["Vache", "Chèvre", "Brebie"],
-      selected: '',
+      typeLaits: ["Vache", "Chèvre", "Brebie"],
+      typeLait: '',
+      typeLaitFrom: '',
       fromage: '',
       result: '',
-      styleResult:''
     }
+  },
+  watch: {
+    objFromage() {
+      if (this.objFromage !== null) {
+        this.fromage = this.objFromage.fromage;
+        this.typeLaitFrom = this.objFromage.lait;
+      }
+    },
   },
   methods: {
     clickTypeLait(e) {
@@ -49,9 +61,8 @@ export default {
       })
     },
     submitForm() {
-      //TODO vérifie r le choix dans la bdd ou script dans leaflet
-      var res = true
-      this.result = res;
+      this.result = this.typeLaitFrom === this.typeLait;
+      this.$emit('score', this.result)
     }
   }
 }

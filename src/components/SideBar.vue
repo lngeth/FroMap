@@ -1,12 +1,13 @@
 <template>
   <div class="col-sm-4">
     <div v-if="etat">
-      <h1>Le jeu </h1>
-      <questionnaire></questionnaire>
+      <h1 class="text-center">Le jeu - {{ departement }}</h1>
+      <questionnaire :obj-fromage="this.fromage" :score-user="this.score" @score="updateScore"></questionnaire>
     </div>
     <div v-else>
       <h3>Veuillez sélectionner une région pour accéder au jeu</h3>
     </div>
+    <p>Score : <span v-if="score < 0" class="text-danger fw-bold">{{ this.score }}</span><span v-else class="text-success fw-bold">{{ this.score }}</span></p>
   </div>
 </template>
 
