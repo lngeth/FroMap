@@ -5,23 +5,28 @@
         <p>Quel lait a été utilisé pour fabriquer {{ fromage }} ?</p>
       </div>
       <div class="mb-3 mt-5 d-flex justify-content-around">
-        <p @click="clickTypeLait('Vache')" v-bind:class="{'selected':typeLait==='Vache'}">Vache</p>
-        <p @click="clickTypeLait('Chèvre')" v-bind:class="{'selected':typeLait==='Chèvre'}">Chèvre</p>
-        <p @click="clickTypeLait('Brebie')" v-bind:class="{'selected':typeLait==='Brebie'}">Brebie</p>
+        <p @click="clickTypeLait('Vache')" v-bind:class="{'selected':typeLait==='Vache', 'notSelected': typeLait !== 'Vache'}">Vache</p>
+        <p @click="clickTypeLait('Chèvre')" v-bind:class="{'selected':typeLait==='Chèvre', 'notSelected': typeLait !== 'Chèvre'}">Chèvre</p>
+        <p @click="clickTypeLait('Brebie')" v-bind:class="{'selected':typeLait==='Brebie', 'notSelected': typeLait !== 'Brebie'}">Brebie</p>
       </div>
       <div class="text-end pe-5">
         <button type="submit" class="btn" style="background-color: #2EC4B6; color: #FFFFFF">Valider</button>
       </div>
     </form>
   </div>
-  <div v-if="result" class="mt-lg-4 d-flex justify-content-center">
+  <div v-if="result === true" class="mt-lg-4 d-flex justify-content-center">
     <div class="alert alert-success text-center">
       Bonne réponse !
     </div>
   </div>
-  <div v-else class="mt-lg-4 d-flex justify-content-center">
+  <div v-else-if="result === false" class="mt-lg-4 d-flex justify-content-center">
     <div class="alert alert-warning text-center">
       Perdu, vous pouvez rejouer!
+    </div>
+  </div>
+  <div v-else class="mt-lg-4 d-flex justify-content-center">
+    <div class="alert alert-info text-center">
+      Choisissez la bonne réponse.
     </div>
   </div>
 </template>
@@ -40,7 +45,7 @@ export default {
       typeLait: '',
       typeLaitFrom: '',
       fromage: '',
-      result: '',
+      result: 'rien',
     }
   },
   watch: {
@@ -70,10 +75,19 @@ export default {
 
 <style scoped>
 .selected {
-  border: 2px solid #FF9F1C;
-  background-color: #FF9F1C;
+  border: 3px solid #FF9F1C;
+  background-color: #FFBF69;
   border-radius: 10px;
   padding: 5px;
   color: #FFFFFF;
+  font-weight: bold;
+}
+
+.notSelected {
+  border: 2px solid #2EC4B6;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  padding: 5px;
+  color: black;
 }
 </style>
