@@ -2,7 +2,7 @@
 
 ## Description
 
-Projet en binome de jeu culturel sur les différents fromages produits en France. On les retrouve sur une carte du monde affichant les régions françaises contenant des fromages spécifiques.
+Projet en binome, jeu culturel sur les différents fromages produits en France. On les retrouve sur une carte du monde affichant les régions françaises contenant des fromages spécifiques.
 
 ## Concept du jeu
 
@@ -36,7 +36,7 @@ npm run serve
 7. Amusez-vous :yum:
 
 ## Modules utilisés
-- __Firebase__ : pour la simulation d'un Back-end
+- __Firebase__ : pour le Back-end
 - __Axios__ : pour les requètes HTTP sur des API externes (comme Opendatasoft)
 - __Vue-router__ : pour la gestion des routes
 - __Bootstrap CSS/JS__ : pour le visuel du site
