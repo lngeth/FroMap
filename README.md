@@ -46,7 +46,7 @@ npm run serve
 Ce site a été réalisé dans le cadre d'un projet noté pour le module de Programmation Web (PWEB).  
 Les images récupérées ont uniquement un but éducatif et non commercial.
 
-## Autheurs
+## Auteurs
 
 :bear: Laurent NGETH
 [GitHub](https://github.com/lngeth)
